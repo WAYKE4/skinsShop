@@ -1,0 +1,3 @@
+nextval('skins_id_seq'::regclass)
+
+nextval('users_id_seq'::regclass)
