@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -16,6 +17,8 @@ public interface UserSecurityRepository extends JpaRepository<UserSecurity, Long
     Optional<UserSecurity> findByUserLogin(String userLogin);
 
     Optional<UserSecurity> findByUserId(Long id);
+
+    Optional<List<UserSecurity>> findAllByActivationTokenIsNotNull() ;
 
     @Modifying
     @Query(nativeQuery = true, value = "UPDATE user_security SET user_password =:newPassword WHERE user_id =:userId")

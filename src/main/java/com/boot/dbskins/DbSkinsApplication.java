@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @OpenAPIDefinition(info = @Info(
         title = "SkinSHOP",
@@ -13,8 +14,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
                 url = "none",
                 email = "gitta.tachir@mail.ru"
         )))
-
 @SpringBootApplication
+@EnableScheduling
 public class DbSkinsApplication {
     public static void main(String[] args) {
         SpringApplication.run(DbSkinsApplication.class, args);
