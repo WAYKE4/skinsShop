@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Modifying
     @Query(nativeQuery = true, value = "UPDATE users SET balance=:balance WHERE id =:userId")
-    void updateInfoAboutUser(@Param("userId") Long userId, @Param("balance") Integer balance);
+    int updateInfoAboutUser(@Param("userId") Long userId, @Param("balance") Integer balance);
 
     @Modifying
     @Query(nativeQuery = true, value = "UPDATE users SET email =:newEmail WHERE id =:userId")

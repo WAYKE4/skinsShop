@@ -13,7 +13,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @SecurityScheme(name = "Bearer Authentication", type = SecuritySchemeType.HTTP,
         bearerFormat = "JWT", scheme = "bearer")
-@EnableAspectJAutoProxy()
 public class SpringConfig implements WebMvcConfigurer {
 
 }

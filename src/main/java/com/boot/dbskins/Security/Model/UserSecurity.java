@@ -37,4 +37,7 @@ public class UserSecurity {
     @ColumnDefault("false")
     @Column(name = "is_blocked", nullable = false)
     private Boolean isBlocked;
+
+    @Column(name = "activation_token")
+    private String activationToken;
 }

@@ -89,7 +89,7 @@ public class SuperAdminController {
 
     @Operation(summary = "Отмена админа")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Админка выдана"),
+            @ApiResponse(responseCode = "201", description = "Отмена прошла успешна"),
             @ApiResponse(responseCode = "403", description = "Отказано в доспупе"),
             @ApiResponse(responseCode = "400", description = "Ошибка в запросе"),
     })
@@ -130,7 +130,7 @@ public class SuperAdminController {
 
     @Operation(summary = "Блокировка пользователя")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Админка выдана"),
+            @ApiResponse(responseCode = "201", description = "Блокировка выдана"),
             @ApiResponse(responseCode = "403", description = "Отказано в доспупе"),
             @ApiResponse(responseCode = "400", description = "Ошибка в запросе"),
     })
@@ -168,9 +168,10 @@ public class SuperAdminController {
 
     @Operation(summary = "Удаление пользователя")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Админка выдана"),
+            @ApiResponse(responseCode = "204", description = "Пользователь удален"),
             @ApiResponse(responseCode = "403", description = "Отказано в доспупе"),
-            @ApiResponse(responseCode = "400", description = "Ошибка в запросе"),
+            @ApiResponse(responseCode = "404", description = "Пользователь не существует"),
+            @ApiResponse(responseCode = "500", description = "Ошибка  приложения"),
     })
     @IsBlocked
     @Transactional(rollbackFor = Exception.class)
@@ -189,14 +190,14 @@ public class SuperAdminController {
                             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                         }
                         log.error("Something wrong with DB!");
-                        return new ResponseEntity<>(HttpStatus.CONFLICT);
+                        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                     }
                     throw new ForbiddenException("Error! You trying to delete another SUPER ADMIN!");
                 }
                 throw new ForbiddenException("Error! You trying to delete yourself ");
             }
             log.error("Error! User with this id don't exist! ID: " + user.getUserId());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         log.error("You aren't authorized!");
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

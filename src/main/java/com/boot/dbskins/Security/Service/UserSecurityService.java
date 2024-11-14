@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserSecurityService {
@@ -28,12 +29,15 @@ public class UserSecurityService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
 
+    private final EmailSenderAttachmetch emailSender;
+
     @Autowired
-    public UserSecurityService(UserSecurityRepository userSecurityRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils) {
+    public UserSecurityService(UserSecurityRepository userSecurityRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils, EmailSenderAttachmetch emailSender) {
         this.userSecurityRepository = userSecurityRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
+        this.emailSender = emailSender;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -46,6 +50,8 @@ public class UserSecurityService {
         if (userByEmail.isPresent()) {
             throw new SameUserInDatabaseEmail(registrationDto.getEmail());
         }
+        String activationToken = UUID.randomUUID().toString();
+
         User user = new User();
         user.setAge(registrationDto.getAge());
         user.setUsername(registrationDto.getUsername());
@@ -59,8 +65,29 @@ public class UserSecurityService {
         userSecurity.setUserPassword(passwordEncoder.encode(registrationDto.getPassword()));
         userSecurity.setRole(Roles.USER);
         userSecurity.setUserId(savedUser.getId());
-        userSecurity.setIsBlocked(false);
+        userSecurity.setIsBlocked(true);
+        userSecurity.setActivationToken(activationToken);
         userSecurityRepository.save(userSecurity);
+
+        String activationLink = "http://localhost:8080/activate?userId=" + savedUser.getId() +
+                "&token=" + activationToken;
+        emailSender.sendMessageWithAttachment(registrationDto.getEmail(), "Account creation", activationLink);
+    }
+
+    public boolean activateUser(Long userId, String token) {
+        Optional<UserSecurity> userSecurityOptional = userSecurityRepository.findById(userId);
+
+        if (userSecurityOptional.isPresent()) {
+            UserSecurity userSecurity = userSecurityOptional.get();
+
+            if (userSecurity.getActivationToken().equals(token)) {
+                userSecurity.setIsBlocked(false);
+                userSecurity.setActivationToken(null);
+                userSecurityRepository.save(userSecurity);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Transactional(rollbackFor = Exception.class)

@@ -24,6 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,11 +75,18 @@ public class SecurityController {
     @Operation(summary = "Регистрация")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Регистрация прошла успешна"),
-            @ApiResponse(responseCode = "403", description = "Отказано в доспупе(валидация)"),
+            @ApiResponse(responseCode = "403", description = "Отказано в доспупе(валидация)" +
+                    "или вы уже авторизованы!"),
             @ApiResponse(responseCode = "409", description = "Пользователь уже существует"),
     })
     @PostMapping("/registration")
     public ResponseEntity<HttpStatus> registration(@RequestBody @Valid RegistrationDTO registrationDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
+            log.info("You are already logged in! " + authentication.getName());
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         userSecurityService.registration(registrationDto);
         log.info("New user has been registered! " + registrationDto.getLogin());
         return new ResponseEntity<>(HttpStatus.CREATED);

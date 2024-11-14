@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface SkinRepository extends JpaRepository<Skins, Long> {
-    Optional<Skins> findSkinsById(Long id);
 
     @Query(nativeQuery = true, value = "SELECT * FROM skins WHERE user_id = :userId")
     Optional<List<Skins>> customGetAllSkinsByUserId(@Param("userId") Long userId);

@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth.requestMatchers
                                 (new AntPathRequestMatcher("/security/registration", "POST")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/security/token", "POST")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/activate", "GET")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/marketplace/AvailableSkins", "GET")).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Data
 @Entity(name = "skins")
-
 public class Skins {
     @Id
     @SequenceGenerator(name = "skinSeqGen", sequenceName = "skins_id_seq", allocationSize = 1)

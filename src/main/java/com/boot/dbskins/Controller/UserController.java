@@ -121,8 +121,10 @@ public class UserController {
         if (result.isPresent()) {
             Optional<User> user = userRepository.findUserById(result.get().getUserId());
             newBalance = user.get().getBalance() + balance;
-            userRepository.updateInfoAboutUser(user.get().getId(), newBalance);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            if (userRepository.updateInfoAboutUser(user.get().getId(), newBalance) > 0) {
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
