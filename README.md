@@ -7,11 +7,11 @@ What You Need to Know Before Executing:
 On local machine:
 
 Install docker
-git clone https://github.com/WAYKE4/skinsShop
-docker compose up -d
-go to http://localhost:8080/swagger-ui/index.html#/
-go to security/token endpoint and get your JWT token(The application has a pre-created superAdminTest (as username and password))
-insert token on swagger page in form
+- git clone https://github.com/WAYKE4/skinsShop
+- docker compose up -d
+- go to http://localhost:8080/swagger-ui/index.html#/
+- go to security/token endpoint and get your JWT token(The application has a pre-created superAdminTest (as username and password))
+- insert token on swagger page in form
 
 ### Database
 If you want to run applications without docker , use DDL file to set up the database correctly
