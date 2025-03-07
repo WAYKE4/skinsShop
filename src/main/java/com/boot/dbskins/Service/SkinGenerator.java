@@ -5,6 +5,7 @@ import com.boot.dbskins.Model.Skins;
 import com.boot.dbskins.Model.TypeOfSkins;
 import com.boot.dbskins.Repository.SkinRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.random.RandomGenerator;
@@ -15,6 +16,7 @@ public class SkinGenerator {
     private final RandomGenerator random = RandomGenerator.getDefault();
     private final SkinRepository skinRepository;
 
+    @Autowired
     public SkinGenerator(SkinRepository skinRepository) {
         this.skinRepository = skinRepository;
     }

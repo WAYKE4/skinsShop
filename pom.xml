@@ -15,7 +15,7 @@
     <description>db-skins</description>
     <properties>
         <java.version>17</java.version>
-    </properties>
+        </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
